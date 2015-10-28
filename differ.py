@@ -9,7 +9,7 @@ def rmsdiff(im1, im2):
     h = ImageChops.difference(im1, im2).histogram()
     return math.sqrt(sum(map(lambda h, i: h*(i**2), h, range(256))) / (float(im1.size[0]) * im1.size[1]))
 
-hamsterDirectory = "/Users/bshlegeris/Dropbox/hamster-capture/"
+hamsterDirectory = "/Users/buck/Dropbox/hamster-capture/"
 
 images = [x for x in sorted(os.listdir(hamsterDirectory)) if "snapshot" in x]
 
@@ -30,12 +30,12 @@ old = Image.open(hamsterDirectory + images[-2])
 new = Image.open(hamsterDirectory + images[-1])
 diff = rmsdiff(old, new)
 
-slackUrl = 'https://bshlgrs.slack.com/services/hooks/slackbot?token=Nx7CvasyqHpd3TFpsxgZDX1l&channel=%23general'
+slackUrl = 'https://bshlgrs.slack.com/services/hooks/slackbot?token=Nx7CvasyqHpd3TFpsxgZDX1l&channel=%23hamsterwatch'
 
 if diff > 20:
   src = hamsterDirectory + images[-1]
-  dest = "/Users/bshlegeris/Dropbox/Public/" + images[-1]
+  dest = "/Users/buck/Dropbox/Public/" + images[-1]
 
   shutil.copyfile(src, dest)
   print(requests.post(slackUrl, "maybe there's a hamster picture, likeliness factor = " + str(diff) +
-      "it's at https://dl.dropboxusercontent.com/u/98145731/" + images[-1]))
+      ". https://dl.dropboxusercontent.com/u/98145731/" + images[-1]))
